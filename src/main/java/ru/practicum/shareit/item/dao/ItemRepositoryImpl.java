@@ -18,8 +18,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ItemRepositoryImpl implements ItemRepository {
 
-    private static final Map<Long, Item> items = new HashMap<>();
-
+    private final Map<Long, Item> items = new HashMap<>();
     private final ItemDtoMapper mapper;
 
     private Long id = 0L;
