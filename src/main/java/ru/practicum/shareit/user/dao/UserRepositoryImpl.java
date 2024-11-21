@@ -54,12 +54,12 @@ public class UserRepositoryImpl implements UserRepository {
             oldUser.setName(newUser.getName());
         }
         if (!oldUser.getEmail().equals(newUser.getEmail()) && newUser.getEmail() != null) {
-            for(User user: users.values()) {
+            users.values().forEach(user -> {
                 if (user.getEmail().equals(newUser.getEmail()) && !user.getId().equals(oldUser.getId())) {
                     log.error("This email is already registered");
                     throw new DataConflictException("Данный email уже зарегестрирован");
                 }
-            }
+            });
             oldUser.setEmail(newUser.getEmail());
         }
     }
