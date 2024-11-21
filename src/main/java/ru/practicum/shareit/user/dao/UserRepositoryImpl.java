@@ -25,12 +25,12 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User createNewUser(User newUser) {
-        for(User user: users.values()) {
-            if (user.getEmail().equals(newUser.getEmail())) {
-                log.error("This email is already registered");
-                throw new DataConflictException("Данный email уже зарегестрирован");
-            }
-        }
+        users.values().forEach(user -> {
+                    if (user.getEmail().equals(newUser.getEmail())) {
+                        log.error("This email is already registered");
+                        throw new DataConflictException("Данный email уже зарегестрирован");
+                    }
+                });
         newUser.setId(generateNewId());
         users.put(newUser.getId(), newUser);
         return newUser;
