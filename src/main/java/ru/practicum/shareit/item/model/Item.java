@@ -12,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 @Builder(toBuilder = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Item {
-    Long id;
+    long id;
     Long ownerId;
     String name;
     String description;

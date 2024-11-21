@@ -9,6 +9,7 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoMapper;
 import ru.practicum.shareit.item.model.Item;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,19 +25,18 @@ public class ItemRepositoryImpl implements ItemRepository {
     private Long id = 0L;
 
     @Override
-    public ItemDto addNewItem(ItemDto dto, Long userId) {
+    public ItemDto addNewItem(ItemDto dto, long userId) {
         Item newItem = mapper.mapItemFromDto(dto)
                 .toBuilder()
                 .ownerId(userId)
                 .id(generateNewId())
                 .build();
         items.put(newItem.getId(), newItem);
-        dto.toBuilder().id(newItem.getId()).build();
-        return dto;
+        return dto.toBuilder().id(newItem.getId()).build();
     }
 
     @Override
-    public ItemDto updateItem(ItemDto dto, Long itemId, Long userId) {
+    public ItemDto updateItem(ItemDto dto, long itemId, long userId) {
         log.info("User id={} is updating item id={}", userId, itemId);
         Item oldItem = findItem(itemId);
         if (oldItem.getOwnerId().equals(userId)) {
@@ -52,13 +52,13 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public ItemDto getItemById(Long itemId) {
+    public ItemDto getItemById(long itemId) {
         log.info("getting item id={}", itemId);
         return mapper.mapDtoFromItem(findItem(itemId));
     }
 
     @Override
-    public Collection<ItemDto> getItemsByUserId(Long userId) {
+    public Collection<ItemDto> getItemsByUserId(long userId) {
         log.info("getting all items with ownerId={}", userId);
         return items.values().stream()
                 .filter(item -> item.getOwnerId().equals(userId))
@@ -68,36 +68,47 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public Collection<ItemDto> getItemsByCertainSearchPrompt(String text) {
-        log.info("Searching for items by search prompt='{}'", text);
-        return items.values().stream()
-                .filter(item -> item.getName().contains(text) || item.getDescription().contains(text))
-                .map(mapper::mapDtoFromItem)
-                .toList();
+        log.info("Searching for items by search prompt");
+        if (!text.isEmpty() && !text.isBlank()) {
+            log.debug("Search prompt='{}'", text);
+            return items.values().stream()
+                    .filter(item -> (item.getName().toLowerCase().contains(text.toLowerCase())
+                            || item.getDescription().toLowerCase().contains(text.toLowerCase())) &&
+                            item.getAvailable())
+                    .map(mapper::mapDtoFromItem)
+                    .toList();
+        } else {
+            log.debug("Search prompt is empty, returning empty list");
+            return new ArrayList<>();
+        }
     }
 
     private Long generateNewId() {
-        return id++;
+        long oldId = id;
+        id = id + 1;
+        return oldId;
     }
 
     private void updateItem(Item oldItem, ItemDto dto) {
-        if (!dto.getName().isBlank()) {
+        if (dto.getName() != null) {
             log.trace("Updating name");
             oldItem.setName(dto.getName());
         }
-        if (!dto.getDescription().isBlank()) {
+        if (dto.getDescription() != null) {
             log.trace("Updating description");
             oldItem.setDescription(dto.getDescription());
         }
-        if (!dto.getAvailable().equals(oldItem.getAvailable())) {
+        if (dto.getAvailable() != null && !dto.getAvailable().equals(oldItem.getAvailable())) {
             log.trace("Updating availability status");
             oldItem.setAvailable(dto.getAvailable());
         }
     }
 
     private Item findItem(Long itemId) {
-        try {
-            return items.get(itemId);
-        } catch (NullPointerException e) {
+        Item item = items.get(itemId);
+        if (item != null) {
+            return item;
+        } else {
             log.error("Item id={} is not found", itemId);
             throw new NotFoundException(String.format("Предмет под id = %s не найден", itemId));
         }

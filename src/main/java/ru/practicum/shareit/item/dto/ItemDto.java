@@ -14,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 @Builder(toBuilder = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemDto {
-    Long id;
+    long id;
     @NotBlank(message = "Не указано имя предмета.")
     String name;
     @NotBlank(message = "Не указано описание предмета.")

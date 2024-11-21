@@ -19,29 +19,29 @@ public class ItemController {
     private final ItemService service;
 
     @GetMapping("/{item-id}")
-    public ItemDto getItemById(@PathVariable("item-id") Long itemId) {
+    public ItemDto getItemById(@PathVariable("item-id") long itemId) {
         return service.getItemById(itemId);
     }
 
     @PostMapping
     public ItemDto saveNewItem(@RequestBody @Valid ItemDto dto,
-                               @RequestHeader("X-Sharer-User-Id") Long userId) {
+                               @RequestHeader("X-Sharer-User-Id") long userId) {
         return service.save(dto, userId);
     }
 
     @PatchMapping("/{item-id}")
     public ItemDto updateItem(@RequestBody ItemDto dto,
-                              @RequestHeader("X-Sharer-User-Id") Long userId,
-                              @PathVariable("item-id") Long itemId) {
+                              @RequestHeader("X-Sharer-User-Id") long userId,
+                              @PathVariable("item-id") long itemId) {
         return service.update(dto, itemId, userId);
     }
 
     @GetMapping
-    public Collection<ItemDto> getAllItemsByOwnerId(@RequestHeader("X-Sharer-User-Id") Long userId) {
+    public Collection<ItemDto> getAllItemsByOwnerId(@RequestHeader("X-Sharer-User-Id") long userId) {
         return service.getItemsByUserId(userId);
     }
 
-    @GetMapping("/search?text={}")
+    @GetMapping("/search")
     public Collection<ItemDto> getItemsBySearchPrompt(@RequestParam String text) {
         return service.getItemsByCertainSearchPrompt(text);
     }

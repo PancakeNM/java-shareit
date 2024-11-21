@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.item.dao.ItemRepository;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.user.service.UserService;
 
 import java.util.Collection;
 
@@ -12,14 +13,17 @@ import java.util.Collection;
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
+    private final UserService userService;
 
     @Override
-    public ItemDto save(ItemDto dto, Long userId) {
+    public ItemDto save(ItemDto dto, long userId) {
+        userService.getById(userId);
         return itemRepository.addNewItem(dto, userId);
     }
 
     @Override
-    public ItemDto update(ItemDto dto, Long itemId, Long userId) {
+    public ItemDto update(ItemDto dto, long itemId, long userId) {
+        userService.getById(userId);
         return itemRepository.updateItem(dto, itemId, userId);
     }
 
@@ -29,7 +33,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Collection<ItemDto> getItemsByUserId(Long userId) {
+    public Collection<ItemDto> getItemsByUserId(long userId) {
+        userService.getById(userId);
         return itemRepository.getItemsByUserId(userId);
     }
 
