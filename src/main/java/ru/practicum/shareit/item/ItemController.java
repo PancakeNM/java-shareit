@@ -16,6 +16,7 @@ import java.util.Collection;
 @RequestMapping("/items")
 public class ItemController {
 
+     public static final String HEADER_USER_ID = "X-Sharer-User-Id";
     private final ItemService service;
 
     @GetMapping("/{item-id}")
@@ -25,19 +26,19 @@ public class ItemController {
 
     @PostMapping
     public ItemDto saveNewItem(@RequestBody @Valid ItemDto dto,
-                               @RequestHeader("X-Sharer-User-Id") long userId) {
+                               @RequestHeader(HEADER_USER_ID) long userId) {
         return service.save(dto, userId);
     }
 
     @PatchMapping("/{item-id}")
     public ItemDto updateItem(@RequestBody ItemDto dto,
-                              @RequestHeader("X-Sharer-User-Id") long userId,
+                              @RequestHeader(HEADER_USER_ID) long userId,
                               @PathVariable("item-id") long itemId) {
         return service.update(dto, itemId, userId);
     }
 
     @GetMapping
-    public Collection<ItemDto> getAllItemsByOwnerId(@RequestHeader("X-Sharer-User-Id") long userId) {
+    public Collection<ItemDto> getAllItemsByOwnerId(@RequestHeader(HEADER_USER_ID) long userId) {
         return service.getItemsByUserId(userId);
     }
 
