@@ -16,7 +16,7 @@ import java.util.Collection;
 @RequestMapping("/items")
 public class ItemController {
 
-     public static final String HEADER_USER_ID = "X-Sharer-User-Id";
+    private static final String HEADER_USER_ID = "X-Sharer-User-Id";
     private final ItemService service;
 
     @GetMapping("/{item-id}")
