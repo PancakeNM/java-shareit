@@ -1,18 +1,21 @@
 package ru.practicum.shareit.user.model;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-/**
- * TODO Sprint add-controllers.
- */
-@Data
-@Builder(toBuilder = true)
+@Entity
+@Getter
+@Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Table(name = "users")
+@EqualsAndHashCode(of = "id")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+    @Column(length = 50)
     String name;
+    @Column(length = 150)
     String email;
 }
