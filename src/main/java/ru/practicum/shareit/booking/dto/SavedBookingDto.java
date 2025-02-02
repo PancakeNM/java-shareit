@@ -1,23 +1,19 @@
 package ru.practicum.shareit.booking.dto;
 
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.user.dto.UserDto;
 
 import java.time.LocalDateTime;
 
-/**
- * TODO Sprint add-bookings.
- */
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BookingDto {
-    long id;
+public class SavedBookingDto {
+    @NotNull
+    Long itemId;
+    @FutureOrPresent
     LocalDateTime start;
     LocalDateTime end;
-    LocalDateTime status;
-    ItemDto item;
-    UserDto booker;
 }
