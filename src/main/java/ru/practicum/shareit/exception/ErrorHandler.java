@@ -25,4 +25,10 @@ public class ErrorHandler {
     public ErrorResponse handleAccessDenied(AccessDeniedException e) {
         return new ErrorResponse(e.getMessage());
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler
+    public ErrorResponse handleValidation(ValidationException e) {
+        return new ErrorResponse(e.getMessage());
+    }
 }
