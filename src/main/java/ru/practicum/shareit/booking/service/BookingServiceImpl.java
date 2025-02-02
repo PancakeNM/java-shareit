@@ -51,7 +51,7 @@ public class BookingServiceImpl implements BookingService {
     public BookingDto manageBooking(long userId, long bookingId, boolean approved) {
         getUserById(userId);
         Booking booking = getBookingById(bookingId);
-        if(booking.getItem().getOwner().getId() != userId) {
+        if (booking.getItem().getOwner().getId() != userId) {
             throw new ValidationException(Booking.class, "Только владелец может управлять бронированием.");
         }
         booking.setStatus(approved ? BookingStatus.APPROVED : BookingStatus.REJECTED);
