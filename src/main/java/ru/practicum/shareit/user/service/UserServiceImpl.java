@@ -1,38 +1,45 @@
 package ru.practicum.shareit.user.service;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.dao.UserRepository;
+import ru.practicum.shareit.user.dto.SavedUserDto;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.dto.UserDtoMapper;
 import ru.practicum.shareit.user.model.User;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final UserDtoMapper mapper;
+    private final UserMapper mapper;
 
     @Override
-    public UserDto getById(Long userId) {
-        return mapper.mapDtoFromUser(userRepository.getById(userId));
+    public UserDto getUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException("Пользователь с id " + userId + "не найден."));
+        return mapper.map(user);
     }
 
     @Override
-    public UserDto create(UserDto dto) {
-        User newUser = mapper.mapUserFromDto(dto);
-        return mapper.mapDtoFromUser(userRepository.createNewUser(newUser));
+    public UserDto createUser(SavedUserDto userDto) {
+        User newUser = mapper.map(userDto);
+        User savedUser = userRepository.save(newUser);
+        return mapper.map(savedUser);
     }
 
     @Override
-    public UserDto update(UserDto dto, Long userId) {
-        User newUser = mapper.mapUserFromDto(dto);
-        return mapper.mapDtoFromUser(userRepository.updateUser(newUser, userId));
+    public UserDto updateUser(SavedUserDto userDto, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new NotFoundException("Пользователь с id " + userId + "не найден."));
+        mapper.updateUserFromDto(user, userDto);
+        User savedUser = userRepository.save(user);
+        return mapper.map(savedUser);
     }
 
     @Override
-    public void delete(Long userId) {
-        userRepository.deleteUser(userId);
+    public void deleteUser(Long userId) {
+        userRepository.deleteById(userId);
     }
 }
