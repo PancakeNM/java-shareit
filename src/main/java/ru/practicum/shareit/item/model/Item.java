@@ -9,6 +9,7 @@ import ru.practicum.shareit.user.model.User;
 @Entity
 @Getter
 @Setter
+@ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "items")
 @EqualsAndHashCode(of = "id")
@@ -17,14 +18,14 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
     @ManyToOne
-    @JoinColumn(name = "is_available")
+    @JoinColumn(name = "owner_id")
     User owner;
     @Column(length = 100)
     String name;
     @Column(length = 300)
     String description;
     @Column(name = "is_available")
-    Boolean available;
+    boolean available;
     @OneToOne
     @JoinColumn(name = "request_id")
     ItemRequest request;
