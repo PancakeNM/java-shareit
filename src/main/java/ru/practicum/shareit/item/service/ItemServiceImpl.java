@@ -58,8 +58,8 @@ public class ItemServiceImpl implements ItemService {
                 () -> new NotFoundException("Предмет с id " + itemId + " не найден"));
         Booking booking = bookingRepo
                 .findByBookerIdAndItemIdAndEndBeforeOrderByStartDesc(userId, itemId, LocalDateTime.now())
-                .orElseThrow(() -> new ValidationException(Comment.class, "cannot be posted. Please check user id " +
-                        userId + " has previously booked item id " + itemId));
+                .orElseThrow(() -> new ValidationException(Comment.class, "Ошибка добавления комментария. " +
+                       "Пользователь с id " + userId + "не бронировал предмет с id до этого " + itemId));
 
         Comment comment = commentMapper.map(commentSaveDto);
         comment.setAuthor(booking.getBooker());
@@ -75,7 +75,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = itemRepo.findById(itemId).orElseThrow(
                 () -> new NotFoundException("Предмет с ID " + itemId + " не найден"));
         if (item.getOwner().getId() != userId) {
-            throw new AccessDeniedException("item could be updated only by owner");
+            throw new AccessDeniedException("Предмет может обновлять только его владелец");
         }
         itemMapper.updateItemFromDto(item, itemSaveDto);
         Item savedItem = itemRepo.save(item);

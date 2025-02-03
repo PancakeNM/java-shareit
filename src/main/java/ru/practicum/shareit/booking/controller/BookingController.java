@@ -32,15 +32,15 @@ public class BookingController {
         return bookingService.addBooking(userId, savedBookingDto);
     }
 
-    @PatchMapping("/{bookingId}")
+    @PatchMapping("/{booking-id}")
     BookingDto manageBooking(@RequestHeader(value = RequestHttpHeaders.USER_ID) long userId,
-                             @PathVariable long bookingId, @RequestParam boolean approved) {
+                             @PathVariable(name = "booking-id") long bookingId, @RequestParam boolean approved) {
         return bookingService.manageBooking(userId, bookingId, approved);
     }
 
-    @GetMapping("/{bookingId}")
+    @GetMapping("/{booking-id}")
     BookingDto getBooking(@RequestHeader(value = RequestHttpHeaders.USER_ID) long userId,
-                          @PathVariable long bookingId) {
+                          @PathVariable(name = "booking-id") long bookingId) {
         return bookingService.getBooking(userId, bookingId);
     }
 

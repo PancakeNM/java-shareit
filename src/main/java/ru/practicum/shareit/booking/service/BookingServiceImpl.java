@@ -65,7 +65,7 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = getBookingById(bookingId);
         if (booking.getItem().getOwner().getId() != userId && booking.getBooker().getId() != userId) {
             throw new ValidationException(Booking.class, "Только владелец, или человек, оформивший бронирование " +
-                    "может получить бронирование");
+                    "может получить информацию о бронировании.");
         }
         return bookingMapper.map(booking);
     }
@@ -90,7 +90,7 @@ public class BookingServiceImpl implements BookingService {
 
             case ALL -> bookings = bookingRepository.findAllByBookerIdOrderByStartDesc(userId);
 
-            default -> throw new ValidationException(BookingState.class, "invalid");
+            default -> throw new ValidationException(BookingState.class, "Неверный формат");
         }
         return bookingMapper.map(bookings);
     }
@@ -120,7 +120,7 @@ public class BookingServiceImpl implements BookingService {
 
             case ALL -> bookings = bookingRepository.findAllByItemIdInOrderByStartDesc(itemIds);
 
-            default -> throw new ValidationException(BookingState.class, "invalid");
+            default -> throw new ValidationException(BookingState.class, "Невереный формат");
         }
         return bookingMapper.map(bookings);
     }

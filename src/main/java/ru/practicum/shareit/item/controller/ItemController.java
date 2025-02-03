@@ -31,9 +31,9 @@ public class ItemController {
         return service.addItem(userId, itemDto);
     }
 
-    @PostMapping("/{itemId}/comment")
+    @PostMapping("/{item-id}/comment")
     CommentDto addComment(@RequestHeader(value = RequestHttpHeaders.USER_ID) long userId,
-                          @PathVariable long itemId,
+                          @PathVariable("item-id") long itemId,
                           @RequestBody @Validated(ValidateCreateRequest.class) SavedCommentDto savedCommentDto) {
         return service.addComment(userId, itemId, savedCommentDto);
     }
