@@ -1,20 +1,32 @@
 package ru.practicum.shareit.item.model;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
+import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.user.model.User;
 
-/**
- * TODO Sprint add-controllers.
- */
-@Data
-@Builder(toBuilder = true)
+@Entity
+@Getter
+@Setter
+@ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Table(name = "items")
+@EqualsAndHashCode(of = "id")
 public class Item {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
-    Long ownerId;
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    User owner;
+    @Column(length = 100)
     String name;
+    @Column(length = 300)
     String description;
-    Boolean available;
+    @Column(name = "is_available")
+    boolean available;
+    @OneToOne
+    @JoinColumn(name = "request_id")
+    ItemRequest request;
 }
