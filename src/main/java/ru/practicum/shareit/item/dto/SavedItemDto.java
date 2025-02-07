@@ -23,4 +23,6 @@ public class SavedItemDto {
 
     @NotNull(message = "Доступность не может быть пустым.", groups = {ValidateCreateRequest.class})
     Boolean available;
+
+    Long requestId;
 }

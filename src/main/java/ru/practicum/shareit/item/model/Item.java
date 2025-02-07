@@ -12,7 +12,6 @@ import ru.practicum.shareit.user.model.User;
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "items")
-@EqualsAndHashCode(of = "id")
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +25,7 @@ public class Item {
     String description;
     @Column(name = "is_available")
     boolean available;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "request_id")
     ItemRequest request;
 }

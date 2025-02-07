@@ -16,6 +16,8 @@ import ru.practicum.shareit.item.dto.SavedCommentDto;
 import ru.practicum.shareit.item.dto.SavedItemDto;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.model.User;
 
@@ -34,6 +36,7 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepo;
     private final CommentRepository commentRepo;
     private final BookingRepository bookingRepo;
+    private final ItemRequestRepository itemRequestRepo;
 
     private final ItemMapper itemMapper;
     private final CommentMapper commentMapper;
@@ -41,10 +44,15 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     @Override
     public ItemDto addItem(long userId, SavedItemDto itemSaveDto) {
-        User owner = userRepo.findById(userId).orElseThrow(
-                () -> new NotFoundException("Пользователь с ID " + userId + " не найден"));
+        User owner = getUserById(userId);
         Item item = itemMapper.map(itemSaveDto);
         item.setOwner(owner);
+        Long requestId = itemSaveDto.getRequestId();
+        if (requestId != null) {
+            ItemRequest itemRequest = itemRequestRepo.findById(requestId)
+                    .orElseThrow(() -> new NotFoundException("Запрос с ID " + requestId + " не найден."));
+            item.setRequest(itemRequest);
+        }
         Item savedItem = itemRepo.save(item);
 
         return itemMapper.map(savedItem);
@@ -52,10 +60,8 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public CommentDto addComment(long userId, long itemId, SavedCommentDto commentSaveDto) {
-        User owner = userRepo.findById(userId).orElseThrow(
-                () -> new NotFoundException("Пользователь с ID " + userId + " не найден"));
-        Item item = itemRepo.findById(itemId).orElseThrow(
-                () -> new NotFoundException("Предмет с id " + itemId + " не найден"));
+        User owner = getUserById(userId);
+        Item item = getItemById(itemId);
         Booking booking = bookingRepo
                 .findByBookerIdAndItemIdAndEndBeforeOrderByStartDesc(userId, itemId, LocalDateTime.now())
                 .orElseThrow(() -> new ValidationException(Comment.class, "Ошибка добавления комментария. " +
@@ -72,8 +78,7 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     @Override
     public ItemDto updateItem(long userId, long itemId, SavedItemDto itemSaveDto) {
-        Item item = itemRepo.findById(itemId).orElseThrow(
-                () -> new NotFoundException("Предмет с ID " + itemId + " не найден"));
+        Item item = getItemById(itemId);
         if (item.getOwner().getId() != userId) {
             throw new AccessDeniedException("Предмет может обновлять только его владелец");
         }
@@ -85,8 +90,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto getItem(long itemId) {
-        Item item = itemRepo.findById(itemId).orElseThrow(
-                () -> new NotFoundException("Предмет с ID " + itemId + " не найден"));
+        Item item = getItemById(itemId);
         ItemDto itemDto = itemMapper.map(item);
 
         Collection<LocalDateTime> futureBookings =
@@ -163,5 +167,15 @@ public class ItemServiceImpl implements ItemService {
         return futureBookings.stream()
                 .reduce((first, last) -> last)
                 .orElse(null);
+    }
+
+    private User getUserById(long userId) {
+        return userRepo.findById(userId).orElseThrow(
+                () -> new NotFoundException("Пользователь с ID " + userId + " не найден"));
+    }
+
+    private Item getItemById(long itemId) {
+        return itemRepo.findById(itemId).orElseThrow(
+                () -> new NotFoundException("Предмет с ID " + itemId + " не найден"));
     }
 }
