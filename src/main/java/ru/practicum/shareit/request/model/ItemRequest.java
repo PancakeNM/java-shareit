@@ -1,8 +1,10 @@
-package ru.practicum.shareit.request;
+package ru.practicum.shareit.request.model;
 
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
+import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
 
@@ -11,7 +13,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode(of = "id")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemRequest {
     @Id
@@ -19,5 +20,10 @@ public class ItemRequest {
     long id;
     @Column(length = 300)
     String description;
+    @ToString.Exclude
+    @ManyToOne
+    @JoinColumn(name = "requester_id")
+    User requester;
+    @CreationTimestamp
     LocalDateTime created = LocalDateTime.now();
 }

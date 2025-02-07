@@ -1,16 +1,14 @@
 package ru.practicum.shareit.item.service;
 
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.*;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.SavedItemDto;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.dto.ItemResponseToRequestDto;
 
 import java.util.Collection;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface ItemMapper {
 
     Item map(SavedItemDto savedItemDto);
@@ -21,4 +19,6 @@ public interface ItemMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateItemFromDto(@MappingTarget Item item, SavedItemDto savedItemDto);
+
+    Collection<ItemResponseToRequestDto> mapToResponseToRequest(Collection<Item> items);
 }
