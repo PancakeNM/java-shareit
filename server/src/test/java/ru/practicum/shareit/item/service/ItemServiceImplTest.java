@@ -35,7 +35,7 @@ public class ItemServiceImplTest {
     private ItemDto itemExistedExpected;
     private CommentDto commentAddedExpected;
 
-    private static final long NON_EXISTENT_ID=999;
+    private static final long NON_EXISTENT_ID = 999;
 
     @BeforeEach
     public void testInt() {
@@ -141,7 +141,7 @@ public class ItemServiceImplTest {
     @Test
     void updateItemNotExistTest() {
         long userId = 10;
-        SavedItemDto itemForUpdate =new SavedItemDto();
+        SavedItemDto itemForUpdate = new SavedItemDto();
         itemForUpdate.setName("item");
         itemForUpdate.setDescription("description");
         itemForUpdate.setAvailable(false);
