@@ -120,23 +120,23 @@ public class BookingServiceImpl implements BookingService {
 
             case ALL -> bookings = bookingRepository.findAllByItemIdInOrderByStartDesc(itemIds);
 
-            default -> throw new ValidationException(BookingState.class, "Невереный формат");
+            default -> throw new ValidationException(BookingState.class, "Невереный формат.");
         }
         return bookingMapper.map(bookings);
     }
 
     private User getUserById(long userId) {
         return userRepository.findById(userId).orElseThrow(
-                () -> new AccessDeniedException("Пользователь с ID " + userId + " не найден"));
+                () -> new AccessDeniedException("Пользователь с ID " + userId + " не найден."));
     }
 
     private Item getItemById(long itemId) {
         return itemRepository.findById(itemId).orElseThrow(
-                () -> new NotFoundException("Предмет с ID " + itemId + " не найден"));
+                () -> new NotFoundException("Предмет с ID " + itemId + " не найден."));
     }
 
     private Booking getBookingById(long bookingId) {
         return bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new NotFoundException("Бронирование  с ID " + bookingId + " не найдено"));
+                .orElseThrow(() -> new NotFoundException("Бронирование  с ID " + bookingId + " не найдено."));
     }
 }

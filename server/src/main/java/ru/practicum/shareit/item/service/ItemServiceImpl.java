@@ -171,11 +171,11 @@ public class ItemServiceImpl implements ItemService {
 
     private User getUserById(long userId) {
         return userRepo.findById(userId).orElseThrow(
-                () -> new NotFoundException("Пользователь с ID " + userId + " не найден"));
+                () -> new NotFoundException("Пользователь с ID " + userId + " не найден."));
     }
 
     private Item getItemById(long itemId) {
         return itemRepo.findById(itemId).orElseThrow(
-                () -> new NotFoundException("Предмет с ID " + itemId + " не найден"));
+                () -> new NotFoundException("Предмет с ID " + itemId + " не найден."));
     }
 }
