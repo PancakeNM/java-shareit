@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user.service;
 
 import org.junit.jupiter.api.Test;
+import ru.practicum.shareit.user.dto.SavedUserDto;
 import ru.practicum.shareit.user.model.User;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -15,7 +16,7 @@ public class UserMapperImplTest {
 
     @Test
     void testMapTest() {
-        UserSaveDto user = null;
+        SavedUserDto user = null;
         UserMapperImpl mapper = new UserMapperImpl();
         assertNull(mapper.map(user));
     }
