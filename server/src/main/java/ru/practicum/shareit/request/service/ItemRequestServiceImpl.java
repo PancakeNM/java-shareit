@@ -32,7 +32,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public ItemRequestDto createItemRequest(long userId, SavedItemRequestDto savedItemRequestDto) {
         User user = userRepo.findById(userId).orElseThrow(
-                () -> new NotFoundException("Пользователь с id " + userId + " не найден."));
+                () -> new NotFoundException(String.format("Пользователь с ID %s не найден.", userId)));
         ItemRequest itemRequest = itemRequestMapper.map(savedItemRequestDto);
         itemRequest.setRequester(user);
         ItemRequest savedItemRequest = itemRequestRepo.save(itemRequest);
@@ -57,7 +57,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     public ItemRequestDto getItemRequest(long requestId) {
         ItemRequest itemRequest = itemRequestRepo.findById(requestId)
                 .orElseThrow(
-                        () -> new NotFoundException("Заявка с id " + requestId + " не найдена."));
+                        () -> new NotFoundException(String.format("Заявка с ID %s не найдена.", requestId)));
         Collection<Item> items = itemRepo.findAllByRequestId(requestId);
         ItemRequestDto itemRequestDto = itemRequestMapper.map(itemRequest);
         itemRequestDto.setItems(itemMapper.mapToResponseToRequest(items));

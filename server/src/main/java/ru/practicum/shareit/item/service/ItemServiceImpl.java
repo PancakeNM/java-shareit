@@ -50,7 +50,7 @@ public class ItemServiceImpl implements ItemService {
         Long requestId = itemSaveDto.getRequestId();
         if (requestId != null) {
             ItemRequest itemRequest = itemRequestRepo.findById(requestId)
-                    .orElseThrow(() -> new NotFoundException("Запрос с ID " + requestId + " не найден."));
+                    .orElseThrow(() -> new NotFoundException(String.format("Запрос с ID %s не найден.", requestId)));
             item.setRequest(itemRequest);
         }
         Item savedItem = itemRepo.save(item);
@@ -64,8 +64,9 @@ public class ItemServiceImpl implements ItemService {
         getItemById(itemId);
         Booking booking = bookingRepo
                 .findByBookerIdAndItemIdAndEndBeforeOrderByStartDesc(userId, itemId, LocalDateTime.now())
-                .orElseThrow(() -> new ValidationException(Comment.class, "Ошибка добавления комментария. " +
-                        "Пользователь с id " + userId + " не бронировал предмет с id " + itemId));
+                .orElseThrow(() -> new ValidationException(Comment.class,
+                        String.format("Ошибка добавления комментария. Пользователь с id %s не бронировал предмет с id %s",
+                                userId, itemId)));
 
         Comment comment = commentMapper.map(commentSaveDto);
         comment.setAuthor(booking.getBooker());
@@ -171,11 +172,11 @@ public class ItemServiceImpl implements ItemService {
 
     private User getUserById(long userId) {
         return userRepo.findById(userId).orElseThrow(
-                () -> new NotFoundException("Пользователь с ID " + userId + " не найден."));
+                () -> new NotFoundException(String.format("Пользователь с ID %s не найден.", userId)));
     }
 
     private Item getItemById(long itemId) {
         return itemRepo.findById(itemId).orElseThrow(
-                () -> new NotFoundException("Предмет с ID " + itemId + " не найден."));
+                () -> new NotFoundException(String.format("Предмет с ID %s не найден.", itemId)));
     }
 }

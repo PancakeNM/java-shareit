@@ -127,16 +127,16 @@ public class BookingServiceImpl implements BookingService {
 
     private User getUserById(long userId) {
         return userRepository.findById(userId).orElseThrow(
-                () -> new AccessDeniedException("Пользователь с ID " + userId + " не найден."));
+                () -> new AccessDeniedException(String.format("Пользователь с ID %s не найден.", userId)));
     }
 
     private Item getItemById(long itemId) {
         return itemRepository.findById(itemId).orElseThrow(
-                () -> new NotFoundException("Предмет с ID " + itemId + " не найден."));
+                () -> new NotFoundException(String.format("Предмет с ID %s не найден.", itemId)));
     }
 
     private Booking getBookingById(long bookingId) {
         return bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new NotFoundException("Бронирование  с ID " + bookingId + " не найдено."));
+                .orElseThrow(() -> new NotFoundException(String.format("Бронирование с ID %s не найдено.", bookingId)));
     }
 }

@@ -17,6 +17,7 @@ import ru.practicum.shareit.exceptions.ValidationException;
 @AllArgsConstructor
 public class BookingController {
     private final BookingClient client;
+    private static final String BOOKING_ID = "/{booking-id}";
 
     @PostMapping
     ResponseEntity<Object> addBooking(@RequestHeader(value = RequestHttpHeaders.USER_ID) long userId,
@@ -24,13 +25,13 @@ public class BookingController {
         return client.addBooking(userId, savedBookingDto);
     }
 
-    @PatchMapping("/{booking-id}")
+    @PatchMapping(BOOKING_ID)
     ResponseEntity<Object> manageBooking(@RequestHeader(value = RequestHttpHeaders.USER_ID) long userId,
                              @PathVariable(name = "booking-id") long bookingId, @RequestParam boolean approved) {
         return client.manageBooking(userId, bookingId, approved);
     }
 
-    @GetMapping("/{booking-id}")
+    @GetMapping(BOOKING_ID)
     ResponseEntity<Object> getBooking(@RequestHeader(value = RequestHttpHeaders.USER_ID) long userId,
                           @PathVariable(name = "booking-id") long bookingId) {
         return client.getBooking(userId, bookingId);
